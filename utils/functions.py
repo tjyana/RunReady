@@ -4,12 +4,12 @@ from gradio_client import Client
 from dotenv import load_dotenv
 import os
 
-# # for testing locally --------------------------------------
-# load_dotenv()
-# goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+# for testing locally --------------------------------------
+load_dotenv()
+goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
-# for testing on streamlit share -----------------------------
-goog_api_key = st.secrets['GOOGLE_API_KEY']
+# # for testing on streamlit share -----------------------------
+# goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, current_mileage, current_frequency, current_vo2max):
     model = genai.GenerativeModel('gemini-1.5-flash')
@@ -29,10 +29,12 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
 
     Please make a training plan based on this information, and output it in Japanese.
     Please make sure to follow this output format:
-    - The training plan should be divided into weeks.
+    - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
-
+    - The training plan should be detailed and specific.
+    - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
+    - The training plan should be tailored to the client's needs and goals.
 
     """)
 
