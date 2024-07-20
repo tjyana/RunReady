@@ -11,6 +11,10 @@ goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOO
 # # for testing on streamlit share -----------------------------
 # goog_api_key = st.secrets['GOOGLE_API_KEY']
 
+
+
+
+# add current date, so it gives out specific dates
 def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, current_mileage, current_frequency, current_vo2max):
     model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -35,6 +39,7 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
+    - If their Goal time is faster than the world record for Race distance, please inform them.
 
     """)
 
@@ -47,21 +52,21 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
 
 
 
-def image_generator(prompt):
+# def image_generator(prompt):
 
-    '''
-    Generates images for recipe.
+#     '''
+#     Generates images for recipe.
 
-    '''
+#     '''
 
-    client = Client("ByteDance/SDXL-Lightning")
+#     client = Client("ByteDance/SDXL-Lightning")
 
-    result = client.predict(
-            prompt, # str  in 'Enter your prompt (English)' Textbox component
-            "1-Step",   # Literal['1-Step', '2-Step', '4-Step', '8-Step']  in 'Select inference steps' Dropdown component
-            api_name="/generate_image_1"
-    )
-    file_path = result.split('gradio')[1]
-    url = 'https://bytedance-sdxl-lightning.hf.space/file=/tmp/gradio' + file_path
+#     result = client.predict(
+#             prompt, # str  in 'Enter your prompt (English)' Textbox component
+#             "1-Step",   # Literal['1-Step', '2-Step', '4-Step', '8-Step']  in 'Select inference steps' Dropdown component
+#             api_name="/generate_image_1"
+#     )
+#     file_path = result.split('gradio')[1]
+#     url = 'https://bytedance-sdxl-lightning.hf.space/file=/tmp/gradio' + file_path
 
-    return url
+#     return url

@@ -1,7 +1,8 @@
 import streamlit as st
-from utils.functions import get_trainingplan, image_generator
+from utils.functions import get_trainingplan
 import random
 import os
+from datetime import datetime
 
 
 def main():
@@ -11,14 +12,25 @@ def main():
 
     # Input fields
     st.sidebar.header("目標にしているレースについて教えてください。")
-    race_days_until = st.sidebar.text_area("レースまでの日数", height=50)
-    race_distance = st.sidebar.text_area("距離", height=50)
-    race_goaltime = st.sidebar.text_area("目標タイム", height=50)
+
+    race_distance = st.sidebar.selectbox("距離", ['5K', '10K', 'ハーフ(21.1km)', '30K', 'フル(42.2km)', 'ウルトラ(100km)', 'その他（入力）'])
+    if race_distance == 'その他（入力）':
+        race_distance = st.sidebar.text_input("その他の距離を入力してください。")
+
+    # race_days_until = st.sidebar.select_slider("レースまでの日数", options=[i for i in range(1, 366)])
+    race_day = st.sidebar.date_input("レース日")
+    race_days_until = (race_day - datetime.now().date()).days
+
+    race_goaltime = st.sidebar.text_input("目標タイム")
 
     st.sidebar.header("現在の走力や練習について教えてください。")
+
     current_pb = st.sidebar.text_area("目標レース距離の現PB", height=50)
+
     current_mileage = st.sidebar.text_area("週間走行距離", height=50)
+
     current_frequency = st.sidebar.text_area("練習頻度", height=50)
+
     current_vo2max = st.sidebar.text_area("VO2Max", height=50)
 
 
@@ -33,20 +45,20 @@ def main():
         st.session_state.current_frequency = current_frequency
         st.session_state.current_vo2max = current_vo2max
 
-        st.header("You should eat...")
+        st.header("Your Training Plan")
         output = get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, current_mileage, current_frequency, current_vo2max)
 
-        url = image_generator(output)
+        # url = image_generator(output)
         # last_output = output.split("\n")[-2]
-        process_inputs(output, url)
+        process_inputs(output)
 
 
 
-def process_inputs(input1, url):
+def process_inputs(input1):
     # Function to display the final output
     # Process the inputs here
     st.write(" ", input1)
-    st.image(url, use_column_width=True)
+
 
 
 if __name__ == "__main__":
