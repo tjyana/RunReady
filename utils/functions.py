@@ -3,13 +3,14 @@ import google.generativeai as genai
 from gradio_client import Client
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
-# for testing locally --------------------------------------
-load_dotenv()
-goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+# # for testing locally --------------------------------------
+# load_dotenv()
+# goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
-# # for testing on streamlit share -----------------------------
-# goog_api_key = st.secrets['GOOGLE_API_KEY']
+# for testing on streamlit share -----------------------------
+goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 
 
