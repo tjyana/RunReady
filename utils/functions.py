@@ -5,12 +5,12 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
-# # for testing locally --------------------------------------
-# load_dotenv()
-# goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+# for testing locally --------------------------------------
+load_dotenv()
+goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
-# for testing on streamlit share -----------------------------
-goog_api_key = st.secrets['GOOGLE_API_KEY']
+# # for testing on streamlit share -----------------------------
+# goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 
 
@@ -24,7 +24,7 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
     They have provided you with the following information:
 
     Days until the race: {race_days_until}
-    Race distance: {race_distance} km
+    Race distance: {race_distance}
     Goal time: {race_goaltime}
 
     Current PB: {current_pb}
@@ -40,7 +40,8 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
-    - If their Goal time is faster than the world record for Race distance, please inform them.
+    - If (Goal time) / (Race distance) is faster than 2:30/km, please inform them.
+    - If Goal time is faster than the world record for Race distance, please inform them.
 
     """)
 

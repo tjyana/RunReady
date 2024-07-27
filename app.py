@@ -13,25 +13,32 @@ def main():
     # Input fields
     st.sidebar.header("目標にしているレースについて教えてください。")
 
-    race_distance = st.sidebar.selectbox("距離", ['5K', '10K', 'ハーフ(21.1km)', '30K', 'フル(42.2km)', 'ウルトラ(100km)', 'その他（入力）'])
+    race_distance = st.sidebar.selectbox("距離", ['5K', '10K', '21.1km（ハーフ）', '30K', '42.2km（フル）', '100km（ウルトラ）', 'その他（入力）'])
     if race_distance == 'その他（入力）':
         race_distance = st.sidebar.text_input("その他の距離を入力してください。")
+        # add llm generate function that spits out 'you're running the cross japan race? good luck' or whatever depending on their input
 
     # race_days_until = st.sidebar.select_slider("レースまでの日数", options=[i for i in range(1, 366)])
     race_day = st.sidebar.date_input("レース日")
     race_days_until = (race_day - datetime.now().date()).days
 
-    race_goaltime = st.sidebar.text_input("目標タイム")
+
+    race_goaltime = st.sidebar.text_input("目標タイム（自由記述）")
+    # create
+    # race_days_until = st.sidebar.select_slider("レースまでの日数", options=[i for i in range(1, 366)])
 
     st.sidebar.header("現在の走力や練習について教えてください。")
+    st.sidebar.write('自由記述。詳細であればあるほど、より適切な練習プランが作成されます。')
 
     current_pb = st.sidebar.text_area("目標レース距離の現PB", height=50)
 
     current_mileage = st.sidebar.text_area("週間走行距離", height=50)
 
     current_frequency = st.sidebar.text_area("練習頻度", height=50)
+    # specify: per week?
+    # make it a slider? number input?
 
-    current_vo2max = st.sidebar.text_area("VO2Max", height=50)
+    current_vo2max = st.sidebar.text_area("その他（VO2Max、閾値ペース、など）", height=50)
 
 
     # Submit button
