@@ -16,7 +16,7 @@ goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOO
 
 
 # add current date, so it gives out specific dates
-def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, current_mileage, current_frequency, current_vo2max):
+def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_vo2max):
     model = genai.GenerativeModel('gemini-1.5-flash')
 
     response = model.generate_content(f"""
@@ -26,6 +26,7 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
     Days until the race: {race_days_until}
     Race distance: {race_distance}
     Goal time: {race_goaltime}
+    Goal pace: {race_goalpace} per km
 
     Current PB: {current_pb}
     Weekly mileage: {current_mileage} km
@@ -40,7 +41,6 @@ def get_trainingplan(race_days_until, race_distance, race_goaltime, current_pb, 
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
-    - If (Goal time) / (Race distance) is faster than 2:30/km, please inform them.
     - If Goal time is faster than the world record for Race distance, please inform them.
 
     """)
