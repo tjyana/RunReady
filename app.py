@@ -61,10 +61,16 @@ def main():
     race_goaltime = st.sidebar.select_slider("目標タイム", goaltime_mapping[race_distance_input])
     print('race_goaltime: ', race_goaltime)
 
+    ########################################################################
+    # GOALPACE cleaner/calculator
+    # parse out into separate function later (this goes for entire script lol)
+    ########################################################################
+
+    # clean the goal time input
 
 
-
-    race_goalpace = int(race_goaltime) / int(race_distance)
+    # calculate the goal pace
+    # race_goalpace = int(race_goaltime) / int(race_distance)
 
 
     st.sidebar.header("現在の走力や練習について教えてください。")
@@ -77,6 +83,9 @@ def main():
     current_frequency = st.sidebar.text_area("練習頻度", height=50)
     # specify: per week?
     # make it a slider? number input?
+
+
+    # ask for 中間レース
 
     current_vo2max = st.sidebar.text_area("その他（VO2Max、閾値ペース、など）", height=50)
 
