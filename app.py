@@ -2,7 +2,7 @@ import streamlit as st
 from utils.functions import get_trainingplan
 import random
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # add english version as well. probably a radio button, with a copy of english version of the form
@@ -18,9 +18,11 @@ def main():
     st.sidebar.header("目標にしているレースについて教えてください。")
 
     # DAYS UNTIL RACE
-    # race_days_until = st.sidebar.select_slider("レースまでの日数", options=[i for i in range(1, 366)])
-    race_day = st.sidebar.date_input("レース日")
+    initial_date = datetime.now().date() + timedelta(days=60)
+    race_day = st.sidebar.date_input("レース日", value = initial_date)
     race_days_until = (race_day - datetime.now().date()).days
+    if race_days_until < 14:
+        st.warning("The race is less than 14 days away! Please ensure you are prepared.")
 
     ##### add warning if race day is too close
     ##### also adjust so it outputs plan with dates
