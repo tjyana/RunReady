@@ -142,7 +142,12 @@ def main():
     }
 
     # Current PB
-    current_pb = st.sidebar.select_slider("目標レース距離の現PB", pb_mapping[race_distance_input])
+    # add a 'have you ever run this distance before' option. if no, hide the pb slider
+    distance_experience = st.sidebar.radio("この距離を走ったことがありますか？", ['はい', 'いいえ'])
+    if distance_experience == 'はい':
+        current_pb = st.sidebar.select_slider("目標レース距離の現PB", pb_mapping[race_distance_input])
+    else:
+        current_pb = 'N/A'
 
     # Current Mileage
     current_mileage = st.sidebar.select_slider("週間走行距離(km)", range(0, 300))
