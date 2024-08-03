@@ -5,12 +5,12 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
-# for testing locally --------------------------------------
-load_dotenv()
-goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+# # for testing locally --------------------------------------
+# load_dotenv()
+# goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
-# # for testing on streamlit share -----------------------------
-# goog_api_key = st.secrets['GOOGLE_API_KEY']
+# for testing on streamlit share -----------------------------
+goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 import time
 import functools
@@ -40,8 +40,8 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
 
     Days until the race: {race_days_until}
     Race distance: {race_distance} km
-    Goal time: {race_goaltime} minutes
-    Goal pace: {race_goalpace} per km
+    Goal time: {race_goaltime}
+    Goal pace: {race_goalpace}
 
     Current PB: {current_pb}
     Weekly mileage: {current_mileage} km
