@@ -49,9 +49,10 @@ def main():
     # DAYS UNTIL RACE
     initial_date = datetime.now().date() + timedelta(days=60)
     race_day = st.sidebar.date_input("レース日", value = initial_date)
-    race_days_until = (race_day - datetime.now().date()).days
-    if race_days_until < 14:
-        st.warning(f"レースまで{race_days_until}日を切りました！この期間ではトレーニングプランに十分な時間がないかもしれません。")
+    race_days_until_int: int = (race_day - datetime.now().date()).days
+    race_days_until: str = f'{(race_day - datetime.now().date()).days} days'
+    if race_days_until_int < 14:
+        st.warning(f"レースまで{race_days_until_int}日を切りました！この期間ではトレーニングプランに十分な時間がないかもしれません。")
 
     ##### add warning if race day is too close
     ##### also adjust so it outputs plan with dates
@@ -69,7 +70,7 @@ def main():
     '42.195km（フル）': 42.195,
     '100km（ウルトラ）': 100
     }
-    race_distance_input = st.sidebar.selectbox("距離", list(distance_mapping.keys()))
+    race_distance_input: str = st.sidebar.selectbox("距離", list(distance_mapping.keys()))
     print('race_distance_input: ', race_distance_input)
 
     # get the distances in km
@@ -99,7 +100,7 @@ def main():
 
     # format for feeding to the model
     # get the goal time in 0:00 format
-    race_goaltime = f"{race_goaltime_input.split('h')[0]}:{race_goaltime_input.split('h')[1].split('m')[0]}"
+    race_goaltime: str = f"{race_goaltime_input.split('h')[0]}:{race_goaltime_input.split('h')[1].split('m')[0]}"
     print('race_goaltime: ', race_goaltime)
 
     #############################################
@@ -123,7 +124,7 @@ def main():
     print(race_goalpace_seconds)
 
     # format into 0:00
-    race_goalpace = f'{race_goalpace_minutes}:{race_goalpace_seconds} per kilometer'
+    race_goalpace: str = f'{race_goalpace_minutes}:{race_goalpace_seconds} per kilometer'
     print('race_goalpace: ', race_goalpace)
 
 
@@ -143,20 +144,28 @@ def main():
 
     # Current PB
     # add a 'have you ever run this distance before' option. if no, hide the pb slider
-    distance_experience = st.sidebar.radio("この距離を走ったことがありますか？", ['はい', 'いいえ'])
-    if distance_experience == 'はい':
-        current_pb = st.sidebar.select_slider("目標レース距離の現PB", pb_mapping[race_distance_input])
+    distance_experience = st.sidebar.radio("レース距離を走ったことはありますか？", ['はい', 'いいえ'], horizontal = True)
+    # distance_experience = st.sidebar.toggle("レース距離を走ったことはありますか？")
+    if distance_experience ==  'はい':
+        current_pb_input = st.sidebar.select_slider("目標レース距離の現PB", pb_mapping[race_distance_input])
+        current_pb_hours = current_pb_input.split('h')[0]
+        current_pb_minutes = current_pb_input.split('h')[1].split('m')[0]
+        current_pb: str = f'{current_pb_hours} hours {current_pb_minutes} minutes'
     else:
-        current_pb = 'N/A'
+        current_pb: str = 'N/A'
+    print('current_pb: ', current_pb)
 
     # Current Mileage
-    current_mileage = st.sidebar.select_slider("週間走行距離(km)", range(0, 300))
+    current_mileage_input = st.sidebar.select_slider("週間走行距離", [f'{mileage} km' for mileage in range(0, 150)])
+    current_mileage: str = f'{current_mileage_input} km per week'
 
     # Current Frequency
-    current_frequency = st.sidebar.select_slider("練習頻度(週〇回)", range(0, 15))
+    current_frequency_input = st.sidebar.select_slider("練習頻度(週〇回)", [f'週{frequency}回' for frequency in range(0, 15)])
+    print('current_frequency_input: ', current_frequency_input)
+    current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes = st.sidebar.text_area("その他（自由記述）", placeholder = 'VO2Max、閾値ペース、中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
+    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'VO2Max、閾値ペース、中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
 
 
     # Submit button
