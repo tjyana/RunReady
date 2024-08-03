@@ -38,7 +38,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     You are a professional running coach and you have a new client who is preparing to run a race.
     They have provided you with the following information:
 
-    Days until the race: {race_days_until}
+    Days until the race: {race_days_until} (this is number of DAYS until the race. not weeks.)
     Race distance: {race_distance} km
     Goal time: {race_goaltime}
     Goal pace: {race_goalpace}
@@ -48,8 +48,9 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     Training frequency: {current_frequency} per week
     Other notes to keep in mind: {current_othernotes}
 
-    Please analyze the runner's current ability and compare it to the goal they have set, and
-    make a training plan based on your analysis. Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
+    Please analyze the runner's current ability and compare it to the goal they have set, and judge if it is a realistic goal.
+    Based on this analysis, please propose a training plan.
+    Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
     Output should be in Japanese.
     Please make sure to follow this output format:
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
