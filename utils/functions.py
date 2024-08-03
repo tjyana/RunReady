@@ -29,7 +29,17 @@ def timeit(func):
 
 
 
+# issues with outputs:
+# it is the most pessimistic model ever when it comes to assessing goal times lol.
+    # it always says the goal time is unrealistic, even if the goal time is slower than the current PB.
+    # it also always says the current mileage is insufficient, even if the current mileage is higher than the goal mileage.
+    # fixes:
+        # come up with backend logic to assess the goal time and current mileage in a more realistic way.
+        # something like: unrealstic if goal time is xx% faster than current PB at xx days left. etc
 # add current date, so it gives out specific dates
+# increase in mileage is too aggressive. maybe make it more gradual
+
+
 @timeit
 def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
     model = genai.GenerativeModel('gemini-1.5-flash')
@@ -38,19 +48,20 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     You are a professional running coach and you have a new client who is preparing to run a race.
     They have provided you with the following information:
 
-    Days until the race: {race_days_until} (this is number of DAYS until the race. not weeks.)
+    Days until the race: {race_days_until}
     Race distance: {race_distance}
     Goal time: {race_goaltime}
     Goal pace: {race_goalpace}
 
     Current PB: {current_pb}
-    Weekly mileage: {current_mileage} km
-    Training frequency: {current_frequency} per week
+    Weekly mileage: {current_mileage}
+    Training frequency: {current_frequency}
     Other notes to keep in mind: {current_othernotes}
 
-    Please analyze the runner's current ability and compare it to the goal they have set, and judge if it is a realistic goal.
-    Based on this analysis, please propose a training plan.
+    Please analyze the runner's current ability and compare it to the goal they have set.
+    Based on the above analysis, please propose a training plan.
     Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
+
     Output should be in Japanese.
     Please make sure to follow this output format:
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.

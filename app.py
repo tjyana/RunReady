@@ -37,10 +37,10 @@ from datetime import datetime, timedelta
 def main():
     # Title
     st.sidebar.title("Run Training Planner 🏃")
-    st.sidebar.write("ランニングの練習プランを作成するアプリです。")
+    st.sidebar.write("ランニングの長距離レースに向けて練習プランを作成するアプリです。")
 
     # Input fields
-    st.sidebar.header("目標にしているレースについて教えてください。")
+    st.sidebar.header("レースについて教えてください。")
 
     ########################################################################
     # GOAL RACE INFO
@@ -165,7 +165,7 @@ def main():
     current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'VO2Max、閾値ペース、中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
+    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'ランニング歴、レース経験、VO2Max、閾値ペース、予定している中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
 
 
     # Submit button
