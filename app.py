@@ -4,8 +4,33 @@ import random
 import os
 from datetime import datetime, timedelta
 
+# can we roadmap something for implementations?
+# 1. unit tests
+# 2. refactoring.
+#   - separate the functions
+#   - migrate the functions to a separate file
+#   - add type hints
+#   - add docstrings
+# 3. user tracking. how many times the app has been used
+
+# features backlog:
+# 1. add more languages
+# 2. add miles version
+# 3. standardize output format?
+    # - decide on exact output format
+        # - fields: current situation, goal, gaps/problems, overview/goal of the plan, detailed plan
+# 4. enable csv download
+# 5. style output
+
+
+# finetuning backlog:
+# - the sliders are pretty wide right now bc it tries to take into account all possible times.
+#   - maybe we can adjust the ranges to be more realistic
+#   - or decide on a different input method
 
 # add english version as well. probably a radio button, with a copy of english version of the form
+# miles version too
+
 
 
 # separate out. this is a lot lol
@@ -17,72 +42,94 @@ def main():
     # Input fields
     st.sidebar.header("目標にしているレースについて教えてください。")
 
+    ########################################################################
+    # GOAL RACE INFO
+    #######################################################################
+
     # DAYS UNTIL RACE
     initial_date = datetime.now().date() + timedelta(days=60)
     race_day = st.sidebar.date_input("レース日", value = initial_date)
     race_days_until = (race_day - datetime.now().date()).days
     if race_days_until < 14:
-        st.warning("The race is less than 14 days away! Please ensure you are prepared.")
+        st.warning(f"レースまで{race_days_until}日を切りました！この期間ではトレーニングプランに十分な時間がないかもしれません。")
 
     ##### add warning if race day is too close
     ##### also adjust so it outputs plan with dates
 
 
-    ########################################################################
+    #############################################
     # RACE DISTANCE
     # eventually be able to take other distances
-    #######################################################################
+
 
     distance_mapping = {
     '5K': 5,
     '10K': 10,
     '21.1km（ハーフ）': 21.1,
-    '42.2km（フル）': 42.2,
+    '42.195km（フル）': 42.195,
     '100km（ウルトラ）': 100
     }
     race_distance_input = st.sidebar.selectbox("距離", list(distance_mapping.keys()))
     print('race_distance_input: ', race_distance_input)
 
     # get the distances in km
-    race_distance: int = distance_mapping[race_distance_input]
+    race_distance_float: float = distance_mapping[race_distance_input]
+    race_distance: str = f'{distance_mapping[race_distance_input]} kilometers'
     print('race_distance: ', race_distance)
 
-    # if race_distance == 'その他（入力）':
-    #     race_distance = st.sidebar.text_input("その他の距離を入力してください。")
-    #     # add llm generate function that spits out 'you're running the cross japan race? good luck' or whatever depending on their input
 
 
 
-
-    ########################################################################
+    #############################################
     # GOAL TIME
-    # make it a slider. diff for each distance.
-    ########################################################################
 
     goaltime_mapping = {
     '5K': [f'{h}h{m:02d}m' for h in range(0, 1) for m in range(0, 60, 1) if (h > 0 or m >= 12)],
     '10K': [f'{h}h{m:02d}m' for h in range(0, 2) for m in range(0, 60, 1) if (h > 0 or m >= 25) and (h < 2 or m <= 20)],
     '21.1km（ハーフ）': [f'{h}h{m:02d}m' for h in range(1, 4) for m in range(0, 60, 1) if (h > 0 or m >= 57)],
-    '42.2km（フル）': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
+    '42.195km（フル）': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
     '100km（ウルトラ）': [f'{h}h{m:02d}m' for h in range(6, 20) for m in range(0, 60, 1)],
     }
     race_goaltime_input: str = st.sidebar.select_slider("目標タイム", goaltime_mapping[race_distance_input])
     print('race_goaltime_input: ', race_goaltime_input)
 
-    ########################################################################
-    # GOALPACE cleaner/calculator
-    # parse out into separate function later (this goes for entire script lol)
-    ########################################################################
-
+    # convert the goal time to minutes
     # 1h40m -> 100
-    # clean the goal time input
+    race_goaltime_minutes = int(race_goaltime_input.split('h')[0]) * 60 + int(race_goaltime_input.split('h')[1].split('m')[0])
 
-    race_goaltime = int(race_goaltime_input.split('h')[0]) * 60 + int(race_goaltime_input.split('h')[1].split('m')[0])
+    # format for feeding to the model
+    # get the goal time in 0:00 format
+    race_goaltime = f"{race_goaltime_input.split('h')[0]}:{race_goaltime_input.split('h')[1].split('m')[0]}"
+    print('race_goaltime: ', race_goaltime)
 
-    # calculate the goal pace
-    race_goalpace = race_goaltime / race_distance
+    #############################################
+    # GOAL PACE
+    # parse out into separate function later (this goes for entire script lol)
+
     ### calculate the goal pace in 0:00 format
+    # eg.  55:00 for 10km -> 5:30 per kilometer
 
+    # goalpace as a float.
+    # eg. 5.5
+    race_goalpace_float = race_goaltime_minutes / race_distance_float
+
+    # get minutes and seconds
+    # eg. 5.5 -> 5:30
+    race_goalpace_minutes = str(race_goalpace_float).split(".")[0]
+    print(race_goalpace_minutes)
+    race_goalpace_seconds = str(round(float(str(race_goalpace_float).split(".")[1][0:2]) * 0.6))
+    if len(race_goalpace_seconds) == 1:
+        race_goalpace_seconds = '0' + race_goalpace_seconds
+    print(race_goalpace_seconds)
+
+    # format into 0:00
+    race_goalpace = f'{race_goalpace_minutes}:{race_goalpace_seconds} per kilometer'
+    print('race_goalpace: ', race_goalpace)
+
+
+    ########################################################################
+    # CURRENT RUNNING ABILITY
+    ########################################################################
 
     st.sidebar.header("現在の走力や練習について教えてください。")
 
@@ -90,19 +137,20 @@ def main():
     '5K': [f'{h}h{m:02d}m' for h in range(0, 1) for m in range(0, 60, 1) if (h > 0 or m >= 12)],
     '10K': [f'{h}h{m:02d}m' for h in range(0, 2) for m in range(0, 60, 1) if (h > 0 or m >= 25) and (h < 2 or m <= 20)],
     '21.1km（ハーフ）': [f'{h}h{m:02d}m' for h in range(1, 4) for m in range(0, 60, 1) if (h > 0 or m >= 57)],
-    '42.2km（フル）': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
+    '42.195km（フル）': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
     '100km（ウルトラ）': [f'{h}h{m:02d}m' for h in range(6, 20) for m in range(0, 60, 1)],
     }
+
+    # Current PB
     current_pb = st.sidebar.select_slider("目標レース距離の現PB", pb_mapping[race_distance_input])
 
+    # Current Mileage
     current_mileage = st.sidebar.select_slider("週間走行距離(km)", range(0, 300))
 
+    # Current Frequency
     current_frequency = st.sidebar.select_slider("練習頻度(週〇回)", range(0, 15))
 
-
-
-    # ask for 中間レース
-
+    # Free text input: other notes
     current_othernotes = st.sidebar.text_area("その他（自由記述）", placeholder = 'VO2Max、閾値ペース、中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
 
 
@@ -120,7 +168,7 @@ def main():
 
         st.header("Your Training Plan")
         output = get_trainingplan(race_days_until, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes)
-
+        print(output[0:10])
         # url = image_generator(output)
         # last_output = output.split("\n")[-2]
         process_inputs(output)

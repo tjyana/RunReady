@@ -12,13 +12,28 @@ goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOO
 # # for testing on streamlit share -----------------------------
 # goog_api_key = st.secrets['GOOGLE_API_KEY']
 
+import time
+import functools
+
+def timeit(func):
+    """Decorator to measure the execution time of a function."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()  # Record the start time
+        result = func(*args, **kwargs)
+        end_time = time.time()  # Record the end time
+        elapsed_time = end_time - start_time
+        print(f"Function '{func.__name__}' executed in: {elapsed_time:.4f} seconds")
+        return result
+    return wrapper
 
 
 
 # add current date, so it gives out specific dates
+@timeit
 def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
     model = genai.GenerativeModel('gemini-1.5-flash')
-
+    print('running get_training_plan')
     response = model.generate_content(f"""
     You are a professional running coach and you have a new client who is preparing to run a race.
     They have provided you with the following information:
@@ -48,6 +63,20 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
 
 
     """)
+
+
+# 現状分析:
+
+# 残り113日で、42.2kmを239分（5分66秒/kmペース）で完走することを目標としています。
+# 現在のPBは3時間47分、週15km、週4回の練習です。
+# 過去10ヶ月間は怪我と病気でほとんど走れておらず、現在の体力レベルはPB達成時よりも低いと推測されます。
+# 目標達成に向けた課題:
+
+# 現在の体力レベルでは、目標ペースで42.2kmを走り切ることは難しいでしょう。
+# 週15kmの走行距離は、マラソン完走に必要な体力向上には不十分です。
+# 週4回の練習頻度も、マラソンの準備には十分とは言えません。
+
+
 
 
 # クライアントは21.1kmのレースで110分を目標にしています。現在のPBは1時間55分なので、目標タイムは達成可能な範囲内です。しかし、週間走行距離が17km、トレーニング頻度が週2回と、現段階では目標達成に向けて十分なトレーニング量とは言えません。目標ペースでの走行経験も不足していると考えられます。
