@@ -3,7 +3,7 @@ import google.generativeai as genai
 from gradio_client import Client
 from dotenv import load_dotenv
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # # for testing locally --------------------------------------
 # load_dotenv()
