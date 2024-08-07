@@ -72,9 +72,11 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     - Each week should have a different training plan.
     - Each day should have a different training plan.
     - The training plan should start day after {datetime.now().strftime('%Y-%m-%d')}.
+    - If shorter than 24 weeks, please display plan for all weeks.
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
+    - The training plan should be realistic and achievable.
 
 
 
