@@ -76,7 +76,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     - Each week should have a different training plan.
     - Each day should have a different training plan.
     - The training plan should start day after {datetime.now().strftime('%Y-%m-%d')}.
-    - If shorter than 24 weeks, please display the specific plan for all weeks.
+    - If shorter than 24 weeks, please display the specific plan for all weeks up until the race.
     - Please be specific with paces. Please explicitly state pace in minutes per kilometer, and assign paces for training runs where necessary.
 
     Output should be in Japanese.
