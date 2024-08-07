@@ -42,6 +42,10 @@ def timeit(func):
 
 @timeit
 def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
+    """
+    Function to generate a training plan for a runner based on the inputs provided.
+    """
+
     model = genai.GenerativeModel('gemini-1.5-flash')
     print('running get_training_plan')
     response = model.generate_content(f"""
@@ -76,6 +80,10 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
 
 
     """)
+
+    answer = response.text
+
+    return answer
 
 
 # 現状分析:
@@ -161,9 +169,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
 
 
 
-    answer = response.text
 
-    return answer
 
     # Last output: ```{last_output}```
 

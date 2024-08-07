@@ -35,6 +35,10 @@ from datetime import datetime, timedelta
 
 # separate out. this is a lot lol
 def main():
+
+
+
+
     # Title
     st.sidebar.title("Run Training Planner 🏃")
     st.sidebar.write("ランニングの長距離レースに向けて練習プランを作成するアプリです。")
