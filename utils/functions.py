@@ -42,6 +42,10 @@ def timeit(func):
 
 @timeit
 def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
+    """
+    Function to generate a training plan for a runner based on the inputs provided.
+    """
+
     model = genai.GenerativeModel('gemini-1.5-flash')
     print('running get_training_plan')
     response = model.generate_content(f"""
@@ -67,6 +71,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
+    - The training plan should start on {datetime.now().strftime('%Y-%m-%d')}.
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
@@ -76,95 +81,17 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
 
     """)
 
-
-# 現状分析:
-
-# 残り113日で、42.2kmを239分（5分66秒/kmペース）で完走することを目標としています。
-# 現在のPBは3時間47分、週15km、週4回の練習です。
-# 過去10ヶ月間は怪我と病気でほとんど走れておらず、現在の体力レベルはPB達成時よりも低いと推測されます。
-# 目標達成に向けた課題:
-
-# 現在の体力レベルでは、目標ペースで42.2kmを走り切ることは難しいでしょう。
-# 週15kmの走行距離は、マラソン完走に必要な体力向上には不十分です。
-# 週4回の練習頻度も、マラソンの準備には十分とは言えません。
-
-
-
-
-# クライアントは21.1kmのレースで110分を目標にしています。現在のPBは1時間55分なので、目標タイムは達成可能な範囲内です。しかし、週間走行距離が17km、トレーニング頻度が週2回と、現段階では目標達成に向けて十分なトレーニング量とは言えません。目標ペースでの走行経験も不足していると考えられます。
-
-# トレーニングプラン:
-
-# 目標: 目標ペースでの走行距離を徐々に増やし、レースに必要な持久力とスピードを養う。
-
-
-# 目標:
-
-# 週間走行距離を徐々に増やし、目標レースペースでの走行時間を増やす
-# 週2回の練習から週3回に増やす
-# 異なるペースでの走行を取り入れ、持久力とスピードを向上させる
-# レースシミュレーションを行う
-# 週間走行距離:
-
-# 第1週～第4週: 28km
-# 第5週～第8週: 32km
-# 第9週～第12週: 36km
-# 第13週～第16週: 40km
-# 第17週～第20週: 44km
-# 第21週～レース週: 32km（テーパリング期間）
-
-
-
-
-
-# 週間走行距離目標:
-
-# 1-4 週目: 週間走行距離を徐々に増やし、10km に到達。
-# 5-8 週目: 10km を維持し、インターバルやペース走などの質の高いトレーニングを取り入れる。
-# 9-12 週目: レースペースでの練習を取り入れ、目標ペースに近づける。
-# 13-16 週目: レースペースでの練習を減らし、リカバリーと調整に重点を置く。
-
-    # Include this warning: 注記:
-
-    # このプランはあくまでも目安です。体調や疲労度に応じて調整してください。
-    # 走行中の痛みや違和感を感じたら、すぐに中止し、医師の診察を受けてください。
-    # 十分な睡眠と栄養を摂取し、怪我を防ぎましょう。
-    # Please also include the date when the training plan should start.
-
-#     開始日: [今日の日付から64日後]
-
-# 目標: 10km を 49 分 (4.9 分/km ペース) で完走
-
-# 現在の記録: 40 分
-
-# 週間走行距離: 6 km
-
-# トレーニング頻度: 週 2 回
-
-
-# 13-16 週目: 週間走行距離を減らし、リカバリーに重点を置く。
-
-# 長距離走のペースを少し落とす。
-# 週に 1 回、目標ペースでの短い練習を取り入れる。
-# レース前日は十分な休息をとる。
-
-# 10 週目: 週間走行距離 14km
-
-# 月曜日: 休養
-# 火曜日: ジョグ 5km (ゆったりとしたペース)
-# 水曜日: ペース走 (5km を目標ペースで、レストは 2 分)
-# 木曜日: ジョグ 5km (ゆったりとしたペース)
-# 金曜日: 休養
-# 土曜日: 長距離走 10km (目標ペースで走る)
-# 日曜日: 休養
-
-
-
     answer = response.text
 
     return answer
 
-    # Last output: ```{last_output}```
+
+
+
+
+
+
+
 
 
 
