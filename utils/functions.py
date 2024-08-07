@@ -5,12 +5,12 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
-# # for testing locally --------------------------------------
-# load_dotenv()
-# goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+# for testing locally --------------------------------------
+load_dotenv()
+goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
-# for testing on streamlit share -----------------------------
-goog_api_key = st.secrets['GOOGLE_API_KEY']
+# # for testing on streamlit share -----------------------------
+# goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 import time
 import functools
@@ -67,6 +67,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
+    - The training plan should start on {datetime.now().strftime('%Y-%m-%d')}.
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
