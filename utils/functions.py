@@ -71,7 +71,7 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
-    - The training plan should start on {(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')}.
+    - The training plan should start day after {datetime.now().strftime('%Y-%m-%d')}.
     - The training plan should be detailed and specific.
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - The training plan should be tailored to the client's needs and goals.
