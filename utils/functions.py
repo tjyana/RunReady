@@ -66,18 +66,20 @@ def get_trainingplan(race_days_until: str, race_distance, race_goaltime, race_go
     Based on the above analysis, please propose a training plan.
     Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
 
-    Output should be in Japanese.
+    Guidelines:
+    The training plan should be detailed and specific.
+    The training plan should be tailored to the client's needs and goals.
+    The training plan should be realistic and achievable.
+
     Please make sure to follow this output format:
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
     - The training plan should start day after {datetime.now().strftime('%Y-%m-%d')}.
-    - If shorter than 24 weeks, please display plan for all weeks.
-    - The training plan should be detailed and specific.
-    - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
-    - The training plan should be tailored to the client's needs and goals.
-    - The training plan should be realistic and achievable.
+    - If shorter than 24 weeks, please display the specific plan for all weeks.
+    - Please be specific with paces. Please explicitly state pace in minutes per kilometer, and assign paces for training runs where necessary.
 
+    Output should be in Japanese.
 
 
 
