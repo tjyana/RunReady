@@ -16,6 +16,24 @@ import time
 import functools
 
 
+def ui_title():
+    # Title
+    st.sidebar.title("Run Training Planner 🏃")
+    st.sidebar.write("ランニングの長距離レースに向けて練習プランを作成するアプリです。")
+
+    # Input fields
+    st.sidebar.header("レースについて教えてください。")
+
+
+
+
+
+
+
+
+
+
+
 def get_race_info():
     """
     Take user input on race day and distance
@@ -68,13 +86,11 @@ def get_goal_info(race_distance_input):
     Take user input for goal
 
     Args:
-        none
+        race_distance_input
 
     Returns:
-        race_distance_input
-        race_days_until
-        race_distance_float
-        race_distance
+        race_goaltime_minutes
+        race_goaltime
     """
 
     goaltime_mapping = {
