@@ -17,14 +17,141 @@ import functools
 
 
 
-# def language_options():
-#     st.sidebar.header("言語を選択してください。")
-#     language = st.sidebar.radio("Language", ['English', '日本語'], index = 1)
-#     return language
+def language_options():
+    st.sidebar.header("Select Language:")
+    language = st.sidebar.radio("Language", ['English', '日本語'], horizontal = True)
+    return language
+
+
+############### English ################
+
+def EN_ui_title():
+    # Title
+    st.sidebar.title("RaceReady 🏃")
+    st.sidebar.write("This is an app that creates a training plan for long-distance running races.")
+
+
+    # Input fields
+    st.sidebar.header("Please tell me about the race you are training for.")
+
+
+def EN_ui_get_race_info():
+    # DAYS UNTIL RACE
+    initial_date = datetime.now().date() + timedelta(days=60)
+    race_day = st.sidebar.date_input("Race Day", value = initial_date)
+
+    # RACE DISTANCE
+    distance_mapping = {
+    '5K': 5,
+    '10K': 10,
+    '21.1km (Half)': 21.1,
+    '42.195km (Full)': 42.195,
+    '100km (Ultra)': 100
+    }
+    race_distance_input: str = st.sidebar.selectbox("Distance", list(distance_mapping.keys()), index = 3)
+
+    return race_day, race_distance_input
+
+def EN_get_race_info(race_distance_input, race_day):
+    """
+    Processes race days until and race distance input from the user.
+    UI taken out of the function
+
+    Args:
+        none
+
+    Returns:
+        race_days_until
+        race_distance_input
+        race_distance_float
+        race_distance
+    """
+
+    # RACE DAYS UNTIL
+    race_days_until_int: int = (race_day - datetime.now().date()).days
+    race_days_until: str = f'{(race_day - datetime.now().date()).days} days'
+
+    # RACE DISTANCE
+    distance_mapping = {
+    '5K': 5,
+    '10K': 10,
+    '21.1km (Half)': 21.1,
+    '42.195km (Full)': 42.195,
+    '100km (Ultra)': 100
+    }
+    # get the distances in km from race_distance_input
+    race_distance_float: float = distance_mapping[race_distance_input]
+    race_distance: str = f'{distance_mapping[race_distance_input]} kilometers'
+
+
+    return race_days_until_int, race_days_until, race_distance_float, race_distance
+
+def EN_ui_warnings(race_days_until_int):
+    if race_days_until_int < 0:
+        st.warning("The race has already ended!")
+    elif 0 < race_days_until_int < 14:
+        st.warning(f"The race is in less than {race_days_until_int} days! There may not be enough time for training during this period.")
+    elif race_days_until_int > 180:
+        st.warning(f"The race is quite far away! The training plan may be summarized in the output.")
 
 
 
-############### LANGUAGE TRANSLATION ################
+def EN_ui_get_goal_info(race_distance_input):
+    goaltime_mapping = {
+        '5K': [f'{h}h{m:02d}m' for h in range(0, 1) for m in range(0, 60, 1) if (h > 0 or m >= 12)],
+        '10K': [f'{h}h{m:02d}m' for h in range(0, 2) for m in range(0, 60, 1) if (h > 0 or m >= 25) and (h < 2 or m <= 20)],
+        '21.1km (Half)': [f'{h}h{m:02d}m' for h in range(1, 4) for m in range(0, 60, 1) if (h > 0 or m >= 57)],
+        '42.195km (Full)': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
+        '100km (Ultra)': [f'{h}h{m:02d}m' for h in range(6, 20) for m in range(0, 60, 1)],
+        }
+    race_goaltime_input: str = st.sidebar.select_slider("Goal Time", goaltime_mapping[race_distance_input], value = goaltime_mapping[race_distance_input][(len(goaltime_mapping[race_distance_input])//2)])
+
+    return race_goaltime_input
+
+
+def EN_ui_get_current_ability(race_distance_input):
+
+    st.sidebar.header("Please tell me about your current running ability and training.")
+
+    pb_mapping = {
+    '5K': [f'{h}h{m:02d}m' for h in range(0, 1) for m in range(0, 60, 1) if (h > 0 or m >= 12)],
+    '10K': [f'{h}h{m:02d}m' for h in range(0, 2) for m in range(0, 60, 1) if (h > 0 or m >= 25) and (h < 2 or m <= 20)],
+    '21.1km (Half)': [f'{h}h{m:02d}m' for h in range(1, 4) for m in range(0, 60, 1) if (h > 0 or m >= 57)],
+    '42.195km (Full)': [f'{h}h{m:02d}m' for h in range(1, 8) for m in range(0, 60, 1) if (h > 1 or m >= 59)],
+    '100km (Ultra)': [f'{h}h{m:02d}m' for h in range(6, 20) for m in range(0, 60, 1)],
+    }
+
+    # Current PB
+    # Have you ever run this distance?
+    distance_experience = st.sidebar.radio("Have you ever ran this distance before?", ['Yes', 'No'], horizontal = True)
+
+    if distance_experience ==  'Yes':
+        current_pb_input = st.sidebar.select_slider("Current personal best for the race distance", pb_mapping[race_distance_input], value = pb_mapping[race_distance_input][(len(pb_mapping[race_distance_input])//2)])
+        current_pb_hours = current_pb_input.split('h')[0]
+        current_pb_minutes = current_pb_input.split('h')[1].split('m')[0]
+        current_pb: str = f'{current_pb_hours} hours {current_pb_minutes} minutes'
+    else:
+        current_pb: str = 'N/A'
+
+    # Current Mileage
+    mileage_options = [f'{mileage} km' for mileage in range(0, 150)]
+    current_mileage_input = st.sidebar.select_slider("Weekly mileage", mileage_options, value = mileage_options[len(mileage_options)//2])
+    current_mileage: str = f'{current_mileage_input} km per week'
+
+    # Current Frequency
+    frequency_options = [f'{frequency}/week' for frequency in range(0, 15)]
+    current_frequency_input = st.sidebar.select_slider("Training frequency (runs/week)", frequency_options, value = frequency_options[len(frequency_options)//2])
+    current_frequency: str = f'I run {current_frequency_input}'
+
+    # Free text input: other notes
+    current_othernotes: str = st.sidebar.text_area("Other (free text)", placeholder = 'Running history, race experience, VO2Max, threshold pace, planned intermediate races, injuries or limitations, etc. The more detailed the information, the more specific the training plan will be.', height=50)
+
+    return current_pb, current_mileage, current_frequency, current_othernotes
+
+############### /English ################
+
+
+############### Japanese ################
 
 def ui_title():
     # Title
@@ -114,9 +241,7 @@ def ui_get_current_ability(race_distance_input):
 
     return current_pb, current_mileage, current_frequency, current_othernotes
 
-
-
-############### LANGUAGE TRANSLATION ################
+############### /Japanese ################
 
 
 
@@ -242,7 +367,7 @@ def timeit(func):
 
 
 @timeit
-def get_trainingplan(race_day, race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
+def get_trainingplan(language, race_day, race_days_until: str, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes):
     """
     Function to generate a training plan for a runner based on the inputs provided.
     """
@@ -250,25 +375,24 @@ def get_trainingplan(race_day, race_days_until: str, race_distance, race_goaltim
     model = genai.GenerativeModel('gemini-1.5-flash')
     print('running get_training_plan')
     response = model.generate_content(f"""
-    You are a professional running coach and you have a new client who is preparing to run a race.
-    They have provided you with the following information:
+    You are a professional running coach with a new client who is preparing to run a race.
+    The client has provided you with the following information:
 
     Days until the race: {race_days_until}
     Race distance: {race_distance}
     Goal time: {race_goaltime}
     Goal pace: {race_goalpace}
 
-    Current PB: {current_pb}
+    Current personal best for {race_distance}: {current_pb}
     Weekly mileage: {current_mileage}
     Training frequency: {current_frequency}
     Other notes to keep in mind: {current_othernotes}
 
-    Please analyze the runner's current ability and compare it to the goal they have set.
+    Please analyze the client's current ability and compare it to the goal they have set.
     Based on the above analysis, please propose a training plan.
     Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
 
-    Output should be in Japanese.
-    Please make sure to follow this output format:
+    - Output should be in {language}.
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
@@ -278,6 +402,9 @@ def get_trainingplan(race_day, race_days_until: str, race_distance, race_goaltim
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - Please display the full plan with all weeks.
 
+    When displaying the weekly training plan, please make sure to follow this output format:
+    Week 1 (Start Date - End Date):
+    Monday (Date): [Training Plan]
 
 
     """)
