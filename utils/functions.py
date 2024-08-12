@@ -31,11 +31,14 @@ def EN_ui_title():
     st.sidebar.write("This is an app that creates a training plan for long-distance running races.")
 
 
-    # Input fields
-    st.sidebar.header("Please tell me about the race you are training for.")
+
 
 
 def EN_ui_get_race_info():
+
+    # Input fields
+    st.sidebar.header("Please tell me about the race you are training for.")
+
     # DAYS UNTIL RACE
     initial_date = datetime.now().date() + timedelta(days=60)
     race_day = st.sidebar.date_input("Race Day", value = initial_date)
@@ -405,7 +408,7 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     When displaying the weekly training plan, please make sure to follow this output format:
     Week 1 (Start Date - End Date):
     Monday (Date): [Training Plan]
-
+    etc
 
     """)
 
