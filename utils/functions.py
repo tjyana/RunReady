@@ -405,7 +405,7 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     When displaying the weekly training plan, please make sure to follow this output format:
     Week 1 (Start Date - End Date):
     Monday (Date): [Training Plan]
-
+    etc
 
     """)
 
