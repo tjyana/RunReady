@@ -3,7 +3,7 @@ from utils.functions import get_trainingplan
 import random
 import os
 from datetime import datetime, timedelta
-from utils.functions import get_race_info, get_goal_info, calculate_race_goalpace, get_current_running_ability, ui_title
+from utils.functions import get_race_info, get_goal_info, calculate_race_goalpace, get_current_running_ability, ui_title, ui_warnings, ui_get_race_info, ui_get_goal_info
 
 # can we roadmap something for implementations?
 # 1. unit tests
@@ -53,9 +53,17 @@ def main():
     # # Input fields
     # st.sidebar.header("レースについて教えてください。")
 
-    race_days_until, race_distance_input, race_distance_float, race_distance = get_race_info()
+    race_day, race_distance_input = ui_get_race_info()
 
-    race_goaltime_minutes, race_goaltime = get_goal_info(race_distance_input)
+    race_days_until_int, race_days_until, race_distance_float, race_distance = get_race_info(race_distance_input, race_day)
+
+    ui_warnings(race_days_until_int)
+
+    race_goaltime_input = ui_get_goal_info(race_distance_input)
+
+    race_goaltime_minutes, race_goaltime = get_goal_info(race_goaltime_input)
+
+
 
     race_goalpace = calculate_race_goalpace(race_goaltime_minutes, race_distance_float)
 
@@ -76,7 +84,7 @@ def main():
         st.session_state.current_othernotes = current_othernotes
 
         st.header("Your Training Plan")
-        output = get_trainingplan(race_days_until, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes)
+        output = get_trainingplan(race_day, race_days_until, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes)
         print(output[0:10])
         # url = image_generator(output)
         # last_output = output.split("\n")[-2]
