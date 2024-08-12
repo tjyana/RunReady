@@ -3,7 +3,7 @@ from utils.functions import get_trainingplan
 import random
 import os
 from datetime import datetime, timedelta
-from utils.functions import get_race_info, get_goal_info, calculate_race_goalpace, get_current_running_ability, ui_title, ui_warnings, ui_get_race_info, ui_get_goal_info
+from utils.functions import get_race_info, get_goal_info, calculate_race_goalpace, ui_get_current_ability, ui_title, ui_warnings, ui_get_race_info, ui_get_goal_info
 
 # can we roadmap something for implementations?
 # 1. unit tests
@@ -53,6 +53,8 @@ def main():
     # # Input fields
     # st.sidebar.header("レースについて教えてください。")
 
+
+
     race_day, race_distance_input = ui_get_race_info()
 
     race_days_until_int, race_days_until, race_distance_float, race_distance = get_race_info(race_distance_input, race_day)
@@ -61,13 +63,13 @@ def main():
 
     race_goaltime_input = ui_get_goal_info(race_distance_input)
 
+
+
     race_goaltime_minutes, race_goaltime = get_goal_info(race_goaltime_input)
-
-
 
     race_goalpace = calculate_race_goalpace(race_goaltime_minutes, race_distance_float)
 
-    current_pb, current_mileage, current_frequency, current_othernotes = get_current_running_ability(race_distance_input)
+    current_pb, current_mileage, current_frequency, current_othernotes = ui_get_current_ability(race_distance_input)
 
 
 
