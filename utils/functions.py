@@ -400,7 +400,7 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week, and make sure the miles in that week add up to the total.
     - Each week should have a different training plan.
     - Each day should have a different training plan. Please include rest days.
-    - Number of days per week should be based on the client's current training frequency.
+    - Number of runs per week should be based on the client's current training frequency of {current_frequency}.
 
     - The training plan should start on {datetime.now().strftime('%Y-%m-%d(%A)')}. Please make sure the day of the week is correct.
     - Race day is {race_day}. Please include this in the plan.
