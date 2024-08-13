@@ -159,7 +159,7 @@ def EN_ui_get_current_ability(race_distance_input):
 
 def ui_title():
     # Title
-    st.sidebar.title("RunReady 🏃")
+    st.sidebar.title("RaceReady 🏃")
     st.sidebar.write("ランニングの長距離レースに向けて練習プランを作成するアプリです。")
 
     # Input fields
