@@ -28,8 +28,8 @@ def language_options():
 
 def EN_ui_title():
     # Title
-    st.sidebar.title("RaceReady 🏃")
-    st.sidebar.write("This is an app that creates a training plan for long-distance running races.")
+    st.sidebar.title("RunReady 🏃")
+    st.sidebar.write("Create training plans for long-distance running races.")
 
 
 def EN_ui_get_race_info():
