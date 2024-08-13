@@ -407,7 +407,7 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
 
 
     - Do not increase weekly mileage by more than 10%. Please make sure the increase is gradual.
-    - There is no need to increase mileage every single week. Please include recovery weeks.
+    - No need to increase mileage every single week. Please include recovery weeks.
 
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - Interval training paces should be faster than {race_goalpace} pace.
