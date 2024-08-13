@@ -23,15 +23,13 @@ def language_options():
     return language
 
 
+
 ############### English ################
 
 def EN_ui_title():
     # Title
     st.sidebar.title("RaceReady 🏃")
     st.sidebar.write("This is an app that creates a training plan for long-distance running races.")
-
-
-
 
 
 def EN_ui_get_race_info():
@@ -147,11 +145,14 @@ def EN_ui_get_current_ability(race_distance_input):
     current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes: str = st.sidebar.text_area("Other (free text)", placeholder = 'Running history, race experience, VO2Max, threshold pace, planned intermediate races, injuries or limitations, etc. The more detailed the information, the more specific the training plan will be.', height=50)
+    current_othernotes: str = st.sidebar.text_area("Other (free text)", placeholder = 'Running history, race experience, VO2Max, threshold pace, planned intermediate races, injuries or limitations, etc. The more detailed the information, the more specific the training plan will be.', height=100)
 
     return current_pb, current_mileage, current_frequency, current_othernotes
 
 ############### /English ################
+
+
+
 
 
 ############### Japanese ################
@@ -240,7 +241,7 @@ def ui_get_current_ability(race_distance_input):
     current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'ランニング歴、レース経験、VO2Max、閾値ペース、予定している中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=50)
+    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'ランニング歴、レース経験、VO2Max、閾値ペース、予定している中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=100)
 
     return current_pb, current_mileage, current_frequency, current_othernotes
 
@@ -377,9 +378,10 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
 
     model = genai.GenerativeModel('gemini-1.5-flash')
     print('running get_training_plan')
+
     response = model.generate_content(f"""
     You are a professional running coach with a new client who is preparing to run a race.
-    The client has provided you with the following information:
+    Your client has provided you with the following information:
 
     Days until the race: {race_days_until}
     Race distance: {race_distance}
@@ -391,27 +393,36 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     Training frequency: {current_frequency}
     Other notes to keep in mind: {current_othernotes}
 
-    Please analyze the client's current ability and compare it to the goal they have set.
-    Based on the above analysis, please propose a training plan.
+    Please analyze your client's current ability and compare it to the goal they have set.
+    Based on the above analysis, please propose a training plan to your client.
     Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
 
     - Output should be in {language}.
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week.
     - Each week should have a different training plan.
     - Each day should have a different training plan.
-    - The training plan should start on {datetime.now().strftime('%Y-%m-%d')}.
+    - The training plan should start on {datetime.now().strftime('%Y-%m-%d(%A)')}. Please make sure the day of the week is correct.
     - Race day is {race_day}. Please include this in the plan.
     - The training plan should be detailed and specific.
+    - Show phases of the training plan, if applicable.
+    - Please use the 10% rule for increasing mileage. (Do not increase weekly mileage by more than 10%)
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
     - Please display the full plan with all weeks.
 
-    When displaying the weekly training plan, please make sure to follow this output format:
-    Week 1 (Start Date - End Date):
-    Monday (Date): [Training Plan]
-    etc
+    After your analysis, please output weekly/daily plan in below format (assuming we start on 8/15/2024):
+    ```
+    Phase 1: Base Building (Weeks 1-12, August 15 - November 4) This phase focuses on building a solid aerobic base and increasing mileage gradually.
+
+    Week 1 (August 15 - August 19) Total Mileage: 28km
+    8/15 (Thu): 5km easy run
+    8/16 (Fri): 8km interval training (4 x 1km at 6:30/km pace with 2 min recovery jog)
+    8/17 (Sat): 5km easy run
+    8/18 (Sun): 10km long run at easy pace
+
+    ```
 
     """)
-
+    print({datetime.now().strftime('%Y-%m-%d (%A)')})
     answer = response.text
 
     return answer
