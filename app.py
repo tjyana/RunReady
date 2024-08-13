@@ -64,8 +64,6 @@ def japanese_version():
 # separate out. this is a lot lol
 def main():
 
-
-
     language = language_options()
 
 

@@ -154,7 +154,6 @@ def EN_ui_get_current_ability(race_distance_input):
 
 
 
-
 ############### Japanese ################
 
 def ui_title():
