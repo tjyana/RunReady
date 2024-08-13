@@ -399,24 +399,39 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     - Output should be in {language}.
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week, and make sure the miles in that week add up to the total.
     - Each week should have a different training plan.
-    - Each day should have a different training plan.
+    - Each day should have a different training plan. Please include rest days.
+    - Number of days per week should be based on the client's current training frequency.
+
     - The training plan should start on {datetime.now().strftime('%Y-%m-%d(%A)')}. Please make sure the day of the week is correct.
     - Race day is {race_day}. Please include this in the plan.
-    - The training plan should be detailed and specific.
-    - Show phases of the training plan, if applicable.
+
+
     - Please use the 10% rule for increasing mileage. (Do not increase weekly mileage by more than 10%)
+
     - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
+    - Interval training paces should be faster than {race_goalpace} pace.
+    - Please include cross-training, strength training, and stretching in the plan where necessary.
+
     - Please display the full plan with all weeks.
 
-    After your analysis, please output weekly/daily plan in below format (assuming we start on 8/15/2024):
+    After your analysis, please output weekly/daily plan in below format delineated by ```, with appropriate content in []
+    (below plan is assuming we start on 8/15/2024):
     ```
+    Analysis: [Your analysis here]
+
+    Current situation: [Current situation here]
+
+    Training Plan Overview: [Overview here]
+
+    Training Plan Details: [output in format below]
+
     Phase 1: Base Building (Weeks 1-12, August 15 - November 4) This phase focuses on building a solid aerobic base and increasing mileage gradually.
 
-    Week 1 (August 15 - August 19) Total Mileage: 28km
-    8/15 (Thu): 5km easy run
-    8/16 (Fri): 8km interval training (4 x 1km at 6:30/km pace with 2 min recovery jog)
-    8/17 (Sat): 5km easy run
-    8/18 (Sun): 10km long run at easy pace
+    Week 1 (August 15 - August 19) Total Mileage: [Total mileage for that week]
+    8/15 (Thu): [Training plan for that day]
+    8/16 (Fri): [Training plan for that day]
+    8/17 (Sat): [Training plan for that day]
+    8/18 (Sun): [Training plan for that day]
 
     ```
 
