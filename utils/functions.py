@@ -159,7 +159,7 @@ def EN_ui_get_current_ability(race_distance_input):
 
 def ui_title():
     # Title
-    st.sidebar.title("RaceReady 🏃")
+    st.sidebar.title("RunReady 🏃")
     st.sidebar.write("ランニングの長距離レースに向けて練習プランを作成するアプリです。")
 
     # Input fields
@@ -339,7 +339,7 @@ def calculate_race_goalpace(race_goaltime_minutes, race_distance_float):
     return race_goalpace
 
 
-############### LANGUAGE TRANSLATION ################
+
 
 
 
@@ -395,7 +395,6 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
 
     Please analyze your client's current ability and compare it to the goal they have set.
     Based on the above analysis, please propose a training plan to your client.
-    Please also propose any changes to practice frequency, mileage, or other aspects of the training plan that you think are necessary.
 
     - Output should be in {language}.
     - The training plan should be divided into weeks. Please show scheduled mileage total for that week, and make sure the miles in that week add up to the total.
