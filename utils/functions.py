@@ -10,7 +10,8 @@ load_dotenv()
 goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
 
 # # for testing on streamlit share -----------------------------
-# goog_api_key = st.secrets['GOOGLE_API_KEY']
+if not goog_api_key:
+    goog_api_key = st.secrets['GOOGLE_API_KEY']
 
 import time
 import functools
