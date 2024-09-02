@@ -38,5 +38,7 @@ Thumbs.db
 
 # Directories
 notebooks/
+.streamlit/
 
 .py:Zone.Identifier
+.toml

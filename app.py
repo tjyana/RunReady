@@ -5,34 +5,6 @@ import os
 from datetime import datetime, timedelta
 from utils.functions import language_options, EN_ui_title, EN_ui_get_race_info, EN_ui_warnings, EN_get_race_info, EN_ui_get_goal_info, EN_ui_get_current_ability, get_race_info, get_goal_info, calculate_race_goalpace, ui_get_current_ability, ui_title, ui_warnings, ui_get_race_info, ui_get_goal_info
 
-# can we roadmap something for implementations?
-# 1. unit tests
-# 2. refactoring.
-#   - separate the functions
-#   - migrate the functions to a separate file
-#   - add type hints
-#   - add docstrings
-# 3. user tracking. how many times the app has been used
-
-# features backlog:
-# 1. add more languages
-# 2. add miles version
-# 3. standardize output format?
-    # - decide on exact output format
-        # - fields: current situation, goal, gaps/problems, overview/goal of the plan, detailed plan
-# 4. enable csv download
-# 5. style output
-
-
-# finetuning backlog:
-# - the sliders are pretty wide right now bc it tries to take into account all possible times.
-#   - maybe we can adjust the ranges to be more realistic
-#   - or decide on a different input method
-
-# add english version as well. probably a radio button, with a copy of english version of the form
-# miles version too
-
-
 
 
 def english_version():
@@ -60,8 +32,6 @@ def japanese_version():
 
 
 
-
-# separate out. this is a lot lol
 def main():
 
     language = language_options()
@@ -85,7 +55,7 @@ def main():
         st.session_state.current_frequency = current_frequency
         st.session_state.current_othernotes = current_othernotes
 
-        st.header("Your Training Plan")
+
         output = get_trainingplan(language, race_day, race_days_until, race_distance, race_goaltime, race_goalpace, current_pb, current_mileage, current_frequency, current_othernotes)
 
         process_inputs(output)
@@ -95,7 +65,7 @@ def main():
 def process_inputs(input1):
     # Function to display the final output
     # Process the inputs here
-    st.write(" ", input1)
+    st.write(input1)
 
 
 

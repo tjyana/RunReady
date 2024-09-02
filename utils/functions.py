@@ -1,20 +1,22 @@
 import streamlit as st
-import google.generativeai as genai
-from gradio_client import Client
 from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
-
-# for testing locally --------------------------------------
-load_dotenv()
-goog_api_key = os.getenv('GOOGLE_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
-
-# # for testing on streamlit share -----------------------------
-if not goog_api_key:
-    goog_api_key = st.secrets['GOOGLE_API_KEY']
-
 import time
 import functools
+from openai import OpenAI
+
+
+
+# load API key
+
+# Local
+load_dotenv()
+api_key = os.getenv('OPENAI_API_KEY') # create a variable in .env file 'GOOGLE_API_KEY' and add the api key there
+
+# Streamlit
+if api_key is None:
+    api_key = st.secrets['OPENAI_API_KEY']
 
 
 
@@ -136,12 +138,12 @@ def EN_ui_get_current_ability(race_distance_input):
         current_pb: str = 'N/A'
 
     # Current Mileage
-    mileage_options = [f'{mileage} km' for mileage in range(0, 150)]
+    mileage_options = [f'{mileage} km' for mileage in range(0, 100)]
     current_mileage_input = st.sidebar.select_slider("Weekly mileage", mileage_options, value = mileage_options[len(mileage_options)//2])
     current_mileage: str = f'{current_mileage_input} km per week'
 
     # Current Frequency
-    frequency_options = [f'{frequency}/week' for frequency in range(0, 15)]
+    frequency_options = [f'{frequency}/week' for frequency in range(0, 8)]
     current_frequency_input = st.sidebar.select_slider("Training frequency (runs/week)", frequency_options, value = frequency_options[len(frequency_options)//2])
     current_frequency: str = f'I run {current_frequency_input}'
 
@@ -241,7 +243,7 @@ def ui_get_current_ability(race_distance_input):
     current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'ランニング歴、レース経験、VO2Max、閾値ペース、予定している中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=100)
+    current_othernotes: str = st.sidebar.text_area("その他（自由記述）", placeholder = 'ランニング歴、レース経験、VO2Max、閾値ペース、予定している中間レース、ケガや制限、など。詳細であればあるほど、より適切な練習プランが作成されます。', height=200)
 
     return current_pb, current_mileage, current_frequency, current_othernotes
 
@@ -359,15 +361,6 @@ def timeit(func):
 
 
 
-# issues with outputs:
-# it is the most pessimistic model ever when it comes to assessing goal times lol.
-    # it always says the goal time is unrealistic, even if the goal time is slower than the current PB.
-    # it also always says the current mileage is insufficient, even if the current mileage is higher than the goal mileage.
-    # fixes:
-        # come up with backend logic to assess the goal time and current mileage in a more realistic way.
-        # something like: unrealstic if goal time is xx% faster than current PB at xx days left. etc
-# add current date, so it gives out specific dates
-# increase in mileage is too aggressive. maybe make it more gradual
 
 
 @timeit
@@ -375,72 +368,103 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
     """
     Function to generate a training plan for a runner based on the inputs provided.
     """
+    with st.spinner('Creating a plan...(can take up to a minute)'):
+        client = OpenAI()
 
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    print('running get_training_plan')
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system",
+                "content": "You are a professional running coach with a new client who is preparing to run a race."
+                },
+                {
+                    "role": "user",
+                    "content": f"""
 
-    response = model.generate_content(f"""
-    You are a professional running coach with a new client who is preparing to run a race.
-    Your client has provided you with the following information:
+                    Your client has provided you with the following information:
 
-    Days until the race: {race_days_until}
-    Race distance: {race_distance}
-    Goal time: {race_goaltime}
-    Goal pace: {race_goalpace}
+                    Days until the race: {race_days_until}
+                    Race distance: {race_distance}
+                    Goal time: {race_goaltime}
+                    Goal pace: {race_goalpace}
 
-    Current personal best for {race_distance}: {current_pb}
-    Weekly mileage: {current_mileage}
-    Training frequency: {current_frequency}
-    Other notes to keep in mind: {current_othernotes}
+                    Current personal best for {race_distance}: {current_pb}
+                    Weekly mileage: {current_mileage}
+                    Training frequency: {current_frequency}
+                    Other notes to keep in mind: {current_othernotes}
 
-    Please analyze your client's current ability and compare it to the goal they have set.
-    Based on the above analysis, please propose a training plan to your client.
+                    Please analyze your client's current ability and compare it to the goal they have set.
+                    Based on the above analysis, please propose a training plan to your client.
 
-    - Output should be in {language}.
-    - The training plan should be divided into weeks. Please show scheduled mileage total for that week, and make sure the miles in that week add up to the total.
-    - Each week should have a different training plan.
-    - Each day should have a different training plan. Please include rest days.
-    - Number of runs per week should be based on the client's current training frequency of {current_frequency}.
+                    - Output should be in {language}.
+                    - The training plan should be divided into weeks.
+                    - Each week should have a different training plan.
+                    - Each day should have a different training plan. Please include rest days.
+                    - Number of runs per week should be based on the client's current training frequency of {current_frequency}.
 
-    - The training plan should start on {datetime.now().strftime('%Y-%m-%d(%A)')}. Please make sure the day of the week is correct.
-    - Race day is {race_day}. Please include this in the plan.
+                    - The training plan should start on {datetime.now().strftime('%Y-%m-%d(%A)')}. Please make sure the day of the week is correct.
+                    - Race day is {race_day}. Please include this in the plan.
+
+                    - Please show scheduled mileage total for that week.
+                    - Make sure the listed miles in that week add up to that week's mileage total.
+                        (example: if the weekly mileage is 30km, the sum of the miles listed for that week should be 30km.)
+                    - Do not increase weekly mileage by more than 10%. Please make sure the increase is gradual.
+                    - No need to increase mileage every single week. Please include recovery weeks.
+
+                    - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
+                    - Interval training paces should be faster than {race_goalpace} pace.
+                    - Please include cross-training, strength training, and stretching in the plan where necessary.
+
+                    - Please display the full plan with all weeks.
 
 
-    - Do not increase weekly mileage by more than 10%. Please make sure the increase is gradual.
-    - No need to increase mileage every single week. Please include recovery weeks.
 
-    - Please be specific with paces. Please explicitly state race pace, and assign paces for training runs where necessary.
-    - Interval training paces should be faster than {race_goalpace} pace.
-    - Please include cross-training, strength training, and stretching in the plan where necessary.
 
-    - Please display the full plan with all weeks.
 
-    After your analysis, please output weekly/daily plan in below format delineated by ```, with appropriate content in []
-    (below plan is assuming we start on 8/15/2024):
-    ```
-    Analysis: [Your analysis here]
+                    After your analysis, please output weekly/daily plan in below format, with appropriate content in []
+                    (below plan is assuming we start on 8/15/2024):
 
-    Current situation: [Current situation here]
+                    Analysis: [Your analysis here]
 
-    Training Plan Overview: [Overview here]
+                    Current situation: [Current situation here]
 
-    Training Plan Details: [output in format below]
+                    Training Plan Overview: [Overview here]
 
-    Phase 1: Base Building (Weeks 1-12, August 15 - November 4) This phase focuses on building a solid aerobic base and increasing mileage gradually.
+                    Training Plan Details: [output in format below]
 
-    Week 1 (August 15 - August 19) Total Mileage: [Total mileage for that week]
-    8/15 (Thu): [Training plan for that day]
-    8/16 (Fri): [Training plan for that day]
-    8/17 (Sat): [Training plan for that day]
-    8/18 (Sun): [Training plan for that day]
+                    Phase 1: Base Building (Weeks 1-12, August 15 - November 4) This phase focuses on building a solid aerobic base and increasing mileage gradually.
 
-    ```
+                    Week 1 (August 15 - August 18) Total Running Mileage: [Total mileage for that week]
+                    8/15 (Thu): [Training plan for that day]
+                    8/16 (Fri): [Training plan for that day]
+                    8/17 (Sat): [Training plan for that day]
+                    8/18 (Sun): [Training plan for that day]
 
-    """)
-    print({datetime.now().strftime('%Y-%m-%d (%A)')})
-    answer = response.text
+                    Week 2 (August 19 - August 25) Total Running Mileage: [Total mileage for that week]
+                    8/19 (Mon): [Training plan for that day]
+                    8/20 (Tue): [Training plan for that day]
+                    8/21 (Wed): [Training plan for that day]
+                    8/22 (Thu): [Training plan for that day]
+                    8/23 (Fri): [Training plan for that day]
+                    8/24 (Sat): [Training plan for that day]
+                    8/25 (Sat): [Training plan for that day]
 
-    return answer
+                    ...[rest of training plan]...
 
-# Couldn't get below to work:
-    # - If the output is too long, please provide a summary of the plan and a link to download the full plan as a CSV file.
+                    Disclaimer
+                    The training plans provided by this app are designed to offer general guidance for marathon preparation. They are not intended to replace professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider before starting any new exercise program, especially if you have any pre-existing medical conditions or concerns.
+                    The app's recommendations are based on general best practices for marathon training and may not be suitable for everyone. Individual results may vary, and it is important to listen to your body and make adjustments as needed. The app creators are not liable for any injuries, health issues, or other consequences resulting from the use of the training plans.
+                    By using this app, you acknowledge and accept the risks associated with physical exercise and agree to hold harmless the app developers, associated parties, and affiliates from any claims or damages arising from your use of the training plans.
+                    """
+                }
+            ]
+        )
+
+
+    print(completion.choices)
+    print(completion.choices[0].message.content)
+
+    content = completion.choices[0].message.content
+
+
+    return content
