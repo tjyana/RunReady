@@ -41,3 +41,4 @@ notebooks/
 
 .py:Zone.Identifier
 .streamlit/
+.toml
