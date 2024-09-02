@@ -148,7 +148,7 @@ def EN_ui_get_current_ability(race_distance_input):
     current_frequency: str = f'I run {current_frequency_input}'
 
     # Free text input: other notes
-    current_othernotes: str = st.sidebar.text_area("Other (free text)", placeholder = 'Running history, race experience, VO2Max, threshold pace, planned intermediate races, injuries or limitations, etc. The more detailed the information, the more specific the training plan will be.', height=100)
+    current_othernotes: str = st.sidebar.text_area("Other (free text)", placeholder = 'Running history, race experience, VO2Max, threshold pace, planned intermediate races, injuries or limitations, etc. The more detailed the information, the more specific the training plan will be.', height=200)
 
     return current_pb, current_mileage, current_frequency, current_othernotes
 
