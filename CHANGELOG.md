@@ -3,6 +3,7 @@
 - English version added
 - Switched out Gemini for GPT 4o-mini
 - Prompt output finetuning
+- Major refactoring (split out functions etc)
 
 ## [v2.0] - 2024-08-07
 ### Added
