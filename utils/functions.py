@@ -138,12 +138,12 @@ def EN_ui_get_current_ability(race_distance_input):
         current_pb: str = 'N/A'
 
     # Current Mileage
-    mileage_options = [f'{mileage} km' for mileage in range(0, 150)]
+    mileage_options = [f'{mileage} km' for mileage in range(0, 100)]
     current_mileage_input = st.sidebar.select_slider("Weekly mileage", mileage_options, value = mileage_options[len(mileage_options)//2])
     current_mileage: str = f'{current_mileage_input} km per week'
 
     # Current Frequency
-    frequency_options = [f'{frequency}/week' for frequency in range(0, 15)]
+    frequency_options = [f'{frequency}/week' for frequency in range(0, 8)]
     current_frequency_input = st.sidebar.select_slider("Training frequency (runs/week)", frequency_options, value = frequency_options[len(frequency_options)//2])
     current_frequency: str = f'I run {current_frequency_input}'
 
@@ -421,7 +421,7 @@ def get_trainingplan(language, race_day, race_days_until: str, race_distance, ra
 
 
 
-                    After your analysis, please output weekly/daily plan in below format delineated by ```, with appropriate content in []
+                    After your analysis, please output weekly/daily plan in below format, with appropriate content in []
                     (below plan is assuming we start on 8/15/2024):
 
                     Analysis: [Your analysis here]
