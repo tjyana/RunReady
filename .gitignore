@@ -40,3 +40,4 @@ Thumbs.db
 notebooks/
 
 .py:Zone.Identifier
+.streamlit/
