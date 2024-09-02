@@ -1,9 +1,15 @@
+## [v3.0] - 2024-09-03
+### Added
+- English version added
+- Switched out Gemini for GPT 4o-mini
+- Prompt output finetuning
+
 ## [v2.0] - 2024-08-07
 ### Added
 - Added backend calculations for days until race and race goal pace.
 - UI edits for more specific inputs. Slider bars, pulldown menus, etc.
 - Option asking if user has experience with race distance.
-- Added timer.
+- Added timer internally.
 - Prompt fine-tuning.
 
 ## [v1.0] - 2024-07-21
